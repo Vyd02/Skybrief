@@ -1,0 +1,24 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'io.github.vyd02.skybrief'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'io.github.vyd02.skybrief'
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+    signingConfigs {
+        release {
+            storeFile file(System.getenv('SKY_KEYSTORE') ?: 'none')
+            storePassword System.getenv('SKY_KS_PASS')
+            keyAlias 'skybrief'
+            keyPassword System.getenv('SKY_KS_PASS')
+        }
+    }
+    buildTypes {
+        release { minifyEnabled false; signingConfig signingConfigs.release }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
