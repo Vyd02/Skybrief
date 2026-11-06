@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
         s.setDomStorageEnabled(true);
         s.setGeolocationEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
-        s.setCacheMode(WebSettings.LOAD_DEFAULT);
+        s.setCacheMode(WebSettings.LOAD_NO_CACHE);
         web.setOverScrollMode(View.OVER_SCROLL_NEVER);
         web.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
         root.addView(offline, new FrameLayout.LayoutParams(-1, -1));
         setContentView(root);
         if (!hasLocation()) requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOC_REQ);
-        if (state != null) web.restoreState(state); else web.loadUrl(HOME);
+        if (state != null) web.restoreState(state); else { web.clearCache(false); web.loadUrl(HOME); }
     }
 
     private boolean hasLocation() {
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
     }
 
     @Override protected void onSaveInstanceState(Bundle out) { super.onSaveInstanceState(out); web.saveState(out); }
-    @Override protected void onResume() { super.onResume(); web.onResume(); }
+    @Override protected void onResume() { super.onResume(); web.onResume(); web.evaluateJavascript("try{checkVersion()}catch(e){}", null); }
     @Override protected void onPause() { web.onPause(); super.onPause(); }
     @Override public void onBackPressed() { if (web.canGoBack()) web.goBack(); else super.onBackPressed(); }
 }
