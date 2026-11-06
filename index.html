@@ -291,7 +291,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border:0;border-radiu
   </section>
   </div>
   </div>
-  <div class="foot" id="foot"></div>
+  <div class="foot" id="foot"></div><div class="foot" style="opacity:.5;padding-top:2px">Skybrief v2026.11.06-3</div>
 </div>
 
 <nav class="nav" id="nav" aria-label="Sections"><span class="navpill" id="navpill" aria-hidden="true"></span><a href="#now" data-tab="now" class="on">Now</a><a href="#radar" data-tab="radar">Radar</a><a href="#models" data-tab="models">Models</a><a href="#atmo" data-tab="atmo">Air</a><a href="#week" data-tab="week">Week</a><a href="#ask" data-tab="ask">Ask</a></nav>
@@ -941,5 +941,11 @@ function track(force){if(busy)return;if(!("geolocation" in navigator)){needLocat
 })();
 </script>
 
-<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script>
+<script>
+const SKY_VERSION="2026.11.06-3";
+if("serviceWorker" in navigator){let reloaded=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(reloaded)return;reloaded=true;location.reload()});
+  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(reg=>{const chk=()=>reg.update().catch(()=>{});chk();document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk()});setInterval(chk,10*6e4)}).catch(()=>{})}
+async function checkVersion(){try{const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"});const v=(await r.json()).v;if(v&&v!==SKY_VERSION&&!sessionStorage.getItem("sky-reload-"+v)){sessionStorage.setItem("sky-reload-"+v,"1");location.reload()}}catch(e){}}
+checkVersion();document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkVersion()});
+</script>
 </body></html>
